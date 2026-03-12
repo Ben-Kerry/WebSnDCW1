@@ -1,7 +1,5 @@
 from app.repositories.match import MatchRepository
 from app.repositories.match_prediction import MatchPredictionRepository
 from app.repositories.player import PlayerRepository
-from app.repositories.player_availability import PlayerAvailabilityRepository
-from app.repositories.squad_membership import SquadMembershipRepository
 from app.repositories.team import TeamRepository
 from app.repositories.team_form import TeamFormRepository

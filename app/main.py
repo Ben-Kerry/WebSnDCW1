@@ -7,8 +7,6 @@ from app.core.database import Base, engine
 from app.models import match  # noqa: F401
 from app.models import match_prediction  # noqa: F401
 from app.models import player  # noqa: F401
-from app.models import player_availability  # noqa: F401
-from app.models import squad_membership  # noqa: F401
 from app.models import team  # noqa: F401
 from app.models import team_form  # noqa: F401
 

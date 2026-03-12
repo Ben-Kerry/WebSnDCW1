@@ -15,9 +15,18 @@ class MatchPredictionBase(BaseModel):
     predicted_away_goals: float | None = Field(default=None, ge=0)
     confidence_score: float | None = Field(default=None, ge=0, le=1)
 
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+    )
+
     @model_validator(mode="after")
     def validate_probabilities(self):
-        total = self.home_win_probability + self.draw_probability + self.away_win_probability
+        total = (
+            self.home_win_probability
+            + self.draw_probability
+            + self.away_win_probability
+        )
         if abs(total - 1.0) > 0.02:
             raise ValueError("home/draw/away probabilities must sum to 1.0")
         return self
@@ -39,8 +48,8 @@ class MatchPredictionUpdate(BaseModel):
     predicted_away_goals: float | None = Field(default=None, ge=0)
     confidence_score: float | None = Field(default=None, ge=0, le=1)
 
+    model_config = ConfigDict(protected_namespaces=())
+
 
 class MatchPredictionRead(MatchPredictionBase):
     id: int
-
-    model_config = ConfigDict(from_attributes=True)
