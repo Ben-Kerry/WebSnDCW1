@@ -18,6 +18,9 @@ def player_summary(db: Session = Depends(get_db)):
     return success_response(AnalyticsService(db).player_summaries(), "Player summaries generated")
 
 
-@router.get("/probabilities/summary", response_model=dict)
-def probability_summary(db: Session = Depends(get_db)):
-    return success_response(AnalyticsService(db).probability_summary(), "Probability summary generated")
+@router.get("/predictions/summary", response_model=dict)
+def prediction_summary(db: Session = Depends(get_db)):
+    return success_response(
+        AnalyticsService(db).prediction_summaries(),
+        "Prediction summaries generated",
+    )

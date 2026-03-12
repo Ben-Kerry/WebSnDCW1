@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
 from app.models.match import Match
+from app.models.match_prediction import MatchPrediction
 from app.models.player import Player
-from app.models.probability import Probability
 from app.models.team import Team
 
 
@@ -56,12 +56,19 @@ class AnalyticsService:
 
         return sorted(
             table.values(),
-            key=lambda row: (row["points"], row["goals_for"] - row["goals_against"], row["goals_for"]),
+            key=lambda row: (
+                row["points"],
+                row["goals_for"] - row["goals_against"],
+                row["goals_for"],
+            ),
             reverse=True,
         )
 
     def player_summaries(self):
-        players = self.db.query(Player, Team.name.label("team_name")).join(Team, Player.team_id == Team.id).all()
+        players = self.db.query(Player, Team.name.label("team_name")).join(
+            Team, Player.team_id == Team.id
+        ).all()
+
         return [
             {
                 "player_id": player.id,
@@ -74,12 +81,37 @@ class AnalyticsService:
             for player, team_name in players
         ]
 
-    def probability_summary(self):
-        rows = self.db.query(Probability, Team.name.label("team_name")).join(Team, Probability.team_id == Team.id).all()
+    def prediction_summaries(self):
+        HomeTeam = Team
+        from sqlalchemy.orm import aliased
+        AwayTeam = aliased(Team)
+
+        rows = (
+            self.db.query(
+                MatchPrediction,
+                HomeTeam.name.label("home_team"),
+                AwayTeam.name.label("away_team"),
+            )
+            .join(Match, MatchPrediction.match_id == Match.id)
+            .join(HomeTeam, Match.home_team_id == HomeTeam.id)
+            .join(AwayTeam, Match.away_team_id == AwayTeam.id)
+            .all()
+        )
+
         return [
             {
-                "team_id": probability.team_id,
-                "team_name": team_name,
-                "win_probability": probability.win_probability,
-                "source_confidence": probability.source_confidence,
+                "prediction_id": prediction.id,
+                "match_id": prediction.match_id,
+                "model_name": prediction.model_name,
+                "model_version": prediction.model_version,
+                "home_team": home_team,
+                "away_team": away_team,
+                "home_win_probability": prediction.home_win_probability,
+                "draw_probability": prediction.draw_probability,
+                "away_win_probability": prediction.away_win_probability,
+                "confidence_score": prediction.confidence_score,
+            }
+            for prediction, home_team, away_team in rows
         ]
+
+        return results

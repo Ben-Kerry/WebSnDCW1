@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class LeaderboardEntry(BaseModel):
@@ -21,8 +21,16 @@ class PlayerSummary(BaseModel):
     rating: float
 
 
-class TeamProbabilitySummary(BaseModel):
-    team_id: int
-    team_name: str
-    win_probability: float
-    source_confidence: float
+class MatchPredictionSummary(BaseModel):
+    prediction_id: int
+    match_id: int
+    model_name: str
+    model_version: str
+    home_team: str
+    away_team: str
+    home_win_probability: float
+    draw_probability: float
+    away_win_probability: float
+    confidence_score: float | None
+
+    model_config = ConfigDict(protected_namespaces=())
