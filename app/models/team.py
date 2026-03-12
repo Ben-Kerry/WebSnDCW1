@@ -17,4 +17,3 @@ class Team(Base):
     players = relationship("Player", back_populates="team", cascade="all, delete-orphan")
     home_matches = relationship("Match", foreign_keys="Match.home_team_id", back_populates="home_team")
     away_matches = relationship("Match", foreign_keys="Match.away_team_id", back_populates="away_team")
-    probabilities = relationship("Probability", back_populates="team", cascade="all, delete-orphan")
