@@ -1,8 +1,12 @@
-"""Normalization helpers placeholder."""
+TEAM_ALIASES = {
+    "Man United": "Manchester United",
+    "Inter Milan": "Inter",
+}
 
-from typing import Mapping
+
+def normalize_team_name(name: str) -> str:
+    return TEAM_ALIASES.get(name.strip(), name.strip())
 
 
-def normalize_team(raw: Mapping) -> dict:
-    """Normalize a team record to canonical shape (placeholder)."""
-    return dict(raw)
+def normalize_player_name(name: str) -> str:
+    return " ".join(name.split()).strip()
