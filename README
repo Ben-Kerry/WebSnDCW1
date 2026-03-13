@@ -54,3 +54,5 @@ README.md
    ```bash
    python ingestion/import_excel_data.py
    ```
+
+## See "Api Documentation.pdf" for endpoint and response details
